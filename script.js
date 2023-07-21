@@ -40,14 +40,18 @@ const display = document.querySelector('.display div');
 display.dataset.value = '';
 const operations = document.querySelectorAll('.fourth button');
 const equals = document.querySelector('.equality');
-const clearAll = document.querySelector('.clear');
+const buttonClearAll = document.querySelector('.clear-all');
+const buttonClearOne = document.querySelector('.clear-one')
 const decimal = document.querySelector('.decimal');
+const sign = document.querySelector('.sign')
 
 numbers.forEach(number => number.addEventListener('click',addNumber));
 operations.forEach(operation => operation.addEventListener('click',oper));
 equals.addEventListener('click', equal);
-clearAll.addEventListener('click',clear);
+buttonClearAll.addEventListener('click',clearAll);
+buttonClearOne.addEventListener('click', clearOne);
 decimal.addEventListener('click',typeDecimal);
+sign.addEventListener('click',changeSing);
 
 function equal(){
     if(firstNumber === null || op === true) return;
@@ -90,7 +94,7 @@ function addNumber(){
     display.textContent = display.dataset.value;
 }
 
-function clear(){
+function clearAll(){
     display.textContent = '0';
     firstNumber = null;
     operator = null;
@@ -100,9 +104,20 @@ function clear(){
     display.dataset.value = '';
 }
 
+function clearOne(){
+    display.dataset.value = display.dataset.value.slice(0,display.dataset.value.length - 1);
+    if(display.dataset.value.length === 0) display.textContent = '0';
+    else display.textContent = display.dataset.value;
+}
+
 function typeDecimal(){
     if(display.dataset.value.split('').includes('.')) return;
     if(display.dataset.value === '') display.dataset.value = '0';
     display.dataset.value += '.';
     display.textContent = display.dataset.value;
 }
+
+function changeSing(){
+    display.dataset.value = -display.dataset.value;
+    display.textContent = display.dataset.value;
+}   
