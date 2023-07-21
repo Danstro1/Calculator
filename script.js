@@ -36,8 +36,9 @@ let op = false;
 
 
 const numbers = document.querySelectorAll('.number');
-const display = document.querySelector('.display div');
+const display = document.querySelector('.display .main-screen');
 display.dataset.value = '';
+const subScreen = document.querySelector('.display .sub-screen')
 const operations = document.querySelectorAll('.fourth button');
 const equals = document.querySelector('.equality');
 const buttonClearAll = document.querySelector('.clear-all');
@@ -45,19 +46,21 @@ const buttonClearOne = document.querySelector('.clear-one')
 const decimal = document.querySelector('.decimal');
 const sign = document.querySelector('.sign')
 
-numbers.forEach(number => number.addEventListener('click',addNumber));
-operations.forEach(operation => operation.addEventListener('click',oper));
+numbers.forEach(number => number.addEventListener('click',() => addNumber(number.textContent)));
+operations.forEach(operation => operation.addEventListener('click',() => oper(operation.textContent)));
 equals.addEventListener('click', equal);
 buttonClearAll.addEventListener('click',clearAll);
 buttonClearOne.addEventListener('click', clearOne);
 decimal.addEventListener('click',typeDecimal);
 sign.addEventListener('click',changeSing);
+window.addEventListener('keydown',keyboardInput);
 
 function equal(){
     if(firstNumber === null || op === true) return;
     secondNumber = +display.dataset.value;
     display.dataset.value = operate(operator,firstNumber,secondNumber);
     display.textContent = display.dataset.value;
+    subScreen.textContent += ` = `;
     eq = true;
     op = false;
     firstNumber = null;
@@ -65,37 +68,43 @@ function equal(){
     operator = null;
 }
 
-function oper(){
+function oper(o){
     if(op !== false){
-        operator = this.textContent;
+        operator = o;
         return;
     }
     if(firstNumber !== null){
         secondNumber = +display.dataset.value;
         display.dataset.value = operate(operator,firstNumber,secondNumber);
         display.textContent = display.dataset.value;
+        subScreen.textContent += display.textContent;
+        secondNumber = null;
         operator = null;
     }
     op = true;
     firstNumber = +display.dataset.value;
+    operator = o;
+    subScreen.textContent = `${display.dataset.value} ${o} `;
     display.dataset.value = '';
-    operator = this.textContent;
+
 }
 
-function addNumber(){
+function addNumber(number){
     if(eq == true){
         display.dataset.value = '';
         display.textContent = '0';
         eq = false;
     }
-    if(display.dataset.value === '' && this.textContent === '0') return;
-    display.dataset.value += this.textContent;
+    if(display.dataset.value === '' && number === '0') return;
+    display.dataset.value += number;
+    subScreen.textContent += number;
     op = false;
     display.textContent = display.dataset.value;
 }
 
 function clearAll(){
     display.textContent = '0';
+    subScreen.textContent = '';
     firstNumber = null;
     operator = null;
     secondNumber = null;
@@ -111,6 +120,7 @@ function clearOne(){
 }
 
 function typeDecimal(){
+    if (secondNumber !== null) return;
     if(display.dataset.value.split('').includes('.')) return;
     if(display.dataset.value === '') display.dataset.value = '0';
     display.dataset.value += '.';
@@ -121,3 +131,12 @@ function changeSing(){
     display.dataset.value = -display.dataset.value;
     display.textContent = display.dataset.value;
 }   
+
+function keyboardInput(e){
+    if(e.key >= 0 && e.key <= 9) addNumber(e.key);
+    if('/*-+'.includes(e.key)) oper(e.key);
+    if(e.key === "Backspace") clearOne();
+    if(e.key === 'Escape') clearAll();
+    if(e.key === '=' || e.key === 'Enter') equal();
+    if(e.key === '.') typeDecimal();
+}

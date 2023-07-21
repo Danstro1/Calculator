@@ -32,6 +32,7 @@ body{
     min-height: 90px;
     max-width: 362px;
     display: flex;
+    flex-direction: column;
     justify-content: flex-end;
     align-items: flex-end;
     flex-wrap: wrap;
@@ -40,9 +41,10 @@ body{
     overflow-wrap: break-word;
     word-break: break-all;
 }
-
-.display div{
-    max-width: 362px;
+.sub-screen{
+    align-self: flex-end;
+    font-size: 20px;
+    margin-right: 10px;
 }
 
 button{
