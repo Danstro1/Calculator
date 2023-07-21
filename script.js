@@ -41,11 +41,13 @@ display.dataset.value = '';
 const operations = document.querySelectorAll('.fourth button');
 const equals = document.querySelector('.equality');
 const clearAll = document.querySelector('.clear');
+const decimal = document.querySelector('.decimal');
 
 numbers.forEach(number => number.addEventListener('click',addNumber));
 operations.forEach(operation => operation.addEventListener('click',oper));
 equals.addEventListener('click', equal);
 clearAll.addEventListener('click',clear);
+decimal.addEventListener('click',typeDecimal);
 
 function equal(){
     if(firstNumber === null || op === true) return;
@@ -96,4 +98,11 @@ function clear(){
     eq = false;
     op = false;
     display.dataset.value = '';
+}
+
+function typeDecimal(){
+    if(display.dataset.value.split('').includes('.')) return;
+    if(display.dataset.value === '') display.dataset.value = '0';
+    display.dataset.value += '.';
+    display.textContent = display.dataset.value;
 }
