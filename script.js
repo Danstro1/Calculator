@@ -160,7 +160,12 @@ function typeDecimal(){
 }
 
 function changeSing(){
-    if(display.dataset.value === '' || eq === true) return;
+    if(display.dataset.value === '') return;
+    if(eq === true){
+        display.dataset.value = -display.dataset.value;
+        display.textContent = display.dataset.value;
+        return;
+    }
     subScreen.textContent = subScreen.textContent.slice(0,-display.dataset.value.length);
     display.dataset.value = -display.dataset.value;
     display.textContent = display.dataset.value;
