@@ -41,6 +41,9 @@ body{
     overflow-wrap: break-word;
     word-break: break-all;
 }
+.main-screen{
+    min-height: 58px;
+}
 .sub-screen{
     align-self: flex-end;
     font-size: 20px;

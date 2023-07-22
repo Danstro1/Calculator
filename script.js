@@ -79,7 +79,7 @@ function oper(o){
         secondNumber = +display.dataset.value;
         display.dataset.value = operate(operator,firstNumber,secondNumber);
         display.textContent = display.dataset.value;
-        subScreen.textContent += display.textContent;
+        subScreen.textContent += display.dataset.value;
         secondNumber = null;
         operator = null;
     }
@@ -88,17 +88,22 @@ function oper(o){
     firstNumber = +display.dataset.value;
     operator = o;
     subScreen.textContent = `${display.dataset.value} ${operator} `;
-    display.dataset.value = '';
-
+    display.dataset.value = '';     
+    eq = false;
 }
 
 function addNumber(number){
-    if(eq == true){
+    if(eq === true){
         display.dataset.value = '';
         display.textContent = '0';
+        subScreen.textContent = '';
         eq = false;
     }
-    if(display.dataset.value === '' && number === '0') return;
+    if(display.dataset.value === '0' && number === '0') return;
+    if(!display.dataset.value.includes('.') && display.dataset.value === '0'){
+        display.dataset.value = '';
+        subScreen.textContent = subScreen.textContent.slice(0,subScreen.textContent.length - 1);
+    }
     display.dataset.value += number;
     subScreen.textContent += number;
     op = false;
@@ -113,30 +118,39 @@ function clearAll(){
     secondNumber = null;
     eq = false;
     op = false;
-    cleared = true;
     display.dataset.value = '';
 }
 
 function clearOne(){
-    if(eq === true || op === true) clearAll();
+    if(eq === true || op === true){
+        clearAll();
+        return;
+    } 
     display.dataset.value = display.dataset.value.slice(0,display.dataset.value.length - 1);
-    if(display.dataset.value.length === 0 || display.dataset.value === '0'){
+    if(display.dataset.value.length === 0 && firstNumber !== null){
+        display.dataset.value = '';
+        display.textContent = '';
+        subScreen.textContent = subScreen.textContent.slice(0,subScreen.textContent.length - 1);
+        op = true;
+    }
+    else if(display.dataset.value.length === 0){
         display.dataset.value = '';
         display.textContent = '0';
-        subScreen.textContent = '';
+        subScreen.textContent = subScreen.textContent.slice(0,subScreen.textContent.length - 1);
+        op = true;
     }
     else{
         display.textContent = display.dataset.value;
         subScreen.textContent = subScreen.textContent.slice(0,subScreen.textContent.length - 1);
     }
-    if(display.dataset.value.length === 1) op = true;
 }
 
 function typeDecimal(){
     if (secondNumber !== null) return;
     if(display.dataset.value.split('').includes('.')) return;
     if(display.dataset.value === '') {
-        display.dataset.value = '0'
+        display.dataset.value = '0';
+        subScreen.textContent += '0';
     }
     display.dataset.value += '.';
     subScreen.textContent += '.';
@@ -146,7 +160,7 @@ function typeDecimal(){
 }
 
 function changeSing(){
-    if(display.dataset.value === '') return;
+    if(display.dataset.value === '' || eq === true) return;
     subScreen.textContent = subScreen.textContent.slice(0,-display.dataset.value.length);
     display.dataset.value = -display.dataset.value;
     display.textContent = display.dataset.value;
@@ -167,5 +181,3 @@ function keyboardInput(e){
     } 
     if(e.key === '.') typeDecimal();
 }
-
-
