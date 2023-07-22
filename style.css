@@ -40,10 +40,13 @@ body{
     text-align: right;
     overflow-wrap: break-word;
     word-break: break-all;
+    border-radius: 8px;
 }
+
 .main-screen{
     min-height: 58px;
 }
+
 .sub-screen{
     align-self: flex-end;
     font-size: 20px;
@@ -59,7 +62,7 @@ button{
 }
 
 .main{
-    border: 15px solid gray;
+    border: 20px solid gray;
     border-radius: 10px;
     background-color: gray;
 }
@@ -70,4 +73,18 @@ button:hover{
 
 button:active{
     background-image: linear-gradient(rgb(0 0 0/30%) 0 0);
+}
+
+.operation{
+    background-color: #c97132;
+}
+
+.non-operation{
+    background-color: #547550;
+}
+
+.number,
+.decimal,
+.equality{
+    background-color: #c3d9e0;
 }
