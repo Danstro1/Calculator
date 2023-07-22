@@ -33,6 +33,7 @@ let operator = null;
 let secondNumber = null;
 let eq = false;
 let op = false;
+let cleared = false;
 
 
 const numbers = document.querySelectorAll('.number');
@@ -44,7 +45,8 @@ const equals = document.querySelector('.equality');
 const buttonClearAll = document.querySelector('.clear-all');
 const buttonClearOne = document.querySelector('.clear-one')
 const decimal = document.querySelector('.decimal');
-const sign = document.querySelector('.sign')
+const sign = document.querySelector('.sign');
+const buttons = document.querySelectorAll('button');
 
 numbers.forEach(number => number.addEventListener('click',() => addNumber(number.textContent)));
 operations.forEach(operation => operation.addEventListener('click',() => oper(operation.textContent)));
@@ -64,13 +66,14 @@ function equal(){
     eq = true;
     op = false;
     firstNumber = null;
-    secondNumber = null;
+    secondNumber = null;    
     operator = null;
 }
 
 function oper(o){
     if(op !== false){
         operator = o;
+        subScreen.textContent = `${subScreen.textContent.slice(0,subScreen.textContent.length - 2)} ${operator} `;
         return;
     }
     if(firstNumber !== null){
@@ -81,10 +84,11 @@ function oper(o){
         secondNumber = null;
         operator = null;
     }
+    if(display.dataset.value === '') return;
     op = true;
     firstNumber = +display.dataset.value;
     operator = o;
-    subScreen.textContent = `${display.dataset.value} ${o} `;
+    subScreen.textContent = `${display.dataset.value} ${operator} `;
     display.dataset.value = '';
 
 }
@@ -110,33 +114,59 @@ function clearAll(){
     secondNumber = null;
     eq = false;
     op = false;
+    cleared = true;
     display.dataset.value = '';
 }
 
 function clearOne(){
+    if(eq === true || op === true) clearAll();
     display.dataset.value = display.dataset.value.slice(0,display.dataset.value.length - 1);
-    if(display.dataset.value.length === 0) display.textContent = '0';
-    else display.textContent = display.dataset.value;
+    if(display.dataset.value.length === 0 || display.dataset.value === '0'){
+        display.dataset.value = '';
+        display.textContent = '0';
+        subScreen.textContent = '';
+    }
+    else{
+        display.textContent = display.dataset.value;
+        subScreen.textContent = subScreen.textContent.slice(0,subScreen.textContent.length - 1);
+    }
+    if(display.dataset.value.length === 1) op = true;
 }
 
 function typeDecimal(){
     if (secondNumber !== null) return;
     if(display.dataset.value.split('').includes('.')) return;
-    if(display.dataset.value === '') display.dataset.value = '0';
+    if(display.dataset.value === '') {
+        display.dataset.value = '0'
+    }
     display.dataset.value += '.';
+    subScreen.textContent += '.';
+    subScreen.textContent += display.dataset.value.slice(display.dataset.value.split('').findIndex(index => index === '.'),display.dataset.value.length - 1);
     display.textContent = display.dataset.value;
+
 }
 
 function changeSing(){
+    if(display.dataset.value === '') return;
+    subScreen.textContent = subScreen.textContent.slice(0,-display.dataset.value.length);
     display.dataset.value = -display.dataset.value;
     display.textContent = display.dataset.value;
+    subScreen.textContent += display.dataset.value;
 }   
 
 function keyboardInput(e){
     if(e.key >= 0 && e.key <= 9) addNumber(e.key);
-    if('/*-+'.includes(e.key)) oper(e.key);
+    if('/*-+'.includes(e.key)){
+        e.preventDefault();
+        oper(e.key);
+    }
     if(e.key === "Backspace") clearOne();
     if(e.key === 'Escape') clearAll();
-    if(e.key === '=' || e.key === 'Enter') equal();
+    if(e.key === '=' || e.key === 'Enter'){
+        e.preventDefault();
+        equal();
+    } 
     if(e.key === '.') typeDecimal();
 }
+
+
