@@ -46,7 +46,6 @@ const buttonClearAll = document.querySelector('.clear-all');
 const buttonClearOne = document.querySelector('.clear-one')
 const decimal = document.querySelector('.decimal');
 const sign = document.querySelector('.sign');
-const buttons = document.querySelectorAll('button');
 
 numbers.forEach(number => number.addEventListener('click',() => addNumber(number.textContent)));
 operations.forEach(operation => operation.addEventListener('click',() => oper(operation.textContent)));
